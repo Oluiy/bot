@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int       @id @default(autoincrement())
+  telegramId       String    @unique
+  email            String?   @unique //change back to compulsory
+  firstname        String
+  lastname         String?
+  verificationCode String?
+  codeExpiry       DateTime?
+  verified         Boolean   @default(false)
+  phoneNumber      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  orders           Order[]
+  Message          Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vendor {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  active      Boolean    @default(true)
+  menuItems   MenuItem[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model MenuItem {
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal
+  emoji       String      @default("🍽️")
+  category    Category
+  vendorId    String
+  vendor      Vendor      @relation(fields: [vendorId], references: [id])
+  available   Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id                Int           @id @default(autoincrement())
+  userId            Int
+  user              User          @relation(fields: [userId], references: [id])
+  orderItems        OrderItem[]
+  totalAmount       Decimal
+  paymentStatus     PaymentStatus @default(PENDING)
+  paymentReference  String?
+  orderStatus       OrderStatus   @default(CREATED)
+  deliveryType      DeliveryType  @default(IMMEDIATE)
+  scheduledTime     DateTime?
+  roomNumber        String?
+  phoneNumber       String?
+  instructions      String?
+  courierAssigned   Boolean       @default(false)
+  courierId         String?
+  estimatedDelivery DateTime?
+  rating            Int?
+  feedback          String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  order      Order    @relation(fields: [orderId], references: [id])
+  menuItemId Int
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  quantity   Int
+  price      Decimal
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Category {
+  RICE
+  SNACKS
+  DRINKS
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum OrderStatus {
+  CREATED
+  PAID
+  PREPARING
+  PICKED_UP
+  DELIVERED
+  CANCELED
+}
+
+enum DeliveryType {
+  IMMEDIATE
+  SCHEDULED
+}
