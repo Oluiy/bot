@@ -6,8 +6,15 @@ import { PrismaService } from 'prisma/prisma.service';
 import { food } from './handlers/menu.handler';
 import {
   AvailableHall,
-  occupiedRooms,
-  representedWings,
+  roomsInDanielA,
+  danielWings,
+  roomsInDanielB,
+  roomsInDanielC,
+  roomsInDanielD,
+  roomsInDanielE,
+  roomsInDanielF,
+  roomsInDanielG,
+  roomsInDanielH,
 } from './handlers/hall.handler';
 // import { stringify } from 'querystring';
 
@@ -23,7 +30,7 @@ export class BotService {
   // private db: PrismaClient;
 
   constructor(private prisma: PrismaService) {
-    this.bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN as string);
+    this.bot = new Telegraf<Context>(process.env.TELEGRAM_BOT_TOKEN as string);
     this.initializeHandlers();
     this.bot.use(session());
   }
@@ -122,14 +129,47 @@ export class BotService {
       );
     });
 
+    //daniel hall
     this.bot.action('daniel', async (ctx) => {
       await ctx.answerCbQuery(); // Prevents "button loading" animation
-      ctx.reply('Choose the your wing to be delivered to:', representedWings);
+      ctx.reply('Choose the your wing to be delivered to:', danielWings);
     });
 
     this.bot.action('w1', async (ctx) => {
-      ctx.reply('Choose the room, thank you: ', occupiedRooms);
+      ctx.reply('Choose the room, thank you: ', roomsInDanielA);
     });
+    this.bot.action('w2', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielB);
+    });
+    this.bot.action('w3', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielC);
+    });
+    this.bot.action('w4', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielD);
+    });
+    this.bot.action('w5', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielE);
+    });
+    this.bot.action('w6', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielF);
+    });
+    this.bot.action('w7', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielG);
+    });
+    this.bot.action('w8', async (ctx) => {
+      ctx.reply('Choose the room, thank you: ', roomsInDanielH);
+    });
+
+
+    //Joseph hall
+    // this.bot.action('joseph', async (ctx) => {
+    //   await ctx.answerCbQuery(); // Prevents "button loading" animation
+    //   ctx.reply('Choose the your wing to be delivered to:', danielWings);
+    // });
+
+    // this.bot.action('jw1', async (ctx) => {
+    //   ctx.reply('Choose the room, thank you: ', roomsInDanielA);
+    // });
 
     // if ()
     this.bot.command('hipster', (ctx) => ctx.reply('λ'));
