@@ -15,6 +15,15 @@ import {
   roomsInDanielF,
   roomsInDanielG,
   roomsInDanielH,
+  roomsInJosephA,
+  roomsInJosephB,
+  roomsInJosephC,
+  roomsInJosephD,
+  roomsInJosephE,
+  roomsInJosephF,
+  roomsInJosephG,
+  roomsInJosephH,
+  josephWings,
 } from './handlers/hall.handler';
 // import { stringify } from 'querystring';
 
@@ -136,7 +145,7 @@ export class BotService {
     });
 
     this.bot.action('w1', async (ctx) => {
-      ctx.reply('Choose the room, thank you: ', roomsInDanielA);
+      ctx.reply('Choose the room, thank you: ', roomsInDanielA );
     });
     this.bot.action('w2', async (ctx) => {
       ctx.reply('Choose the room, thank you: ', roomsInDanielB);
